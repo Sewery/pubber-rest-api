@@ -1,8 +1,8 @@
 spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?useUnicode=true&serverTimezone=UTC
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:mysql://pubber-db.cjadnl3hture.eu-north-1.rds.amazonaws.com:3306/Pubber?useUnicode=true&serverTimezone=UTC
+    username: admin
+    password: _Xsm6wMdC;_+4-Y
 server:
   port: ${PORT:8080}
