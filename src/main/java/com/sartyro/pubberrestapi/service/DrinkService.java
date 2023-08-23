@@ -34,6 +34,7 @@ public class DrinkService {
     }
     public DrinkEditDto addDrink(DrinkEditDto drink)
     {
+        drink.setId(DrinkEditDto.EMPTY_ID);
         return DrinkEditDtoMapper.mapToDto(drinkRepository.save(DrinkEditDtoMapper.mapToEntity(drink)));
     }
     @Transactional

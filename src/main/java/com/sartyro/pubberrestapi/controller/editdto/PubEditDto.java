@@ -6,12 +6,15 @@ import lombok.Getter;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.Setter;
+
 import java.util.List;
 
 @Getter
 @Builder
+@Setter
 public class PubEditDto {
-    public final static Long EMPTY_ID=null;
+    public final static Long EMPTY_ID=0L;
     @NotBlank
     private Long id;
     @NotBlank

@@ -1,6 +1,7 @@
 package com.sartyro.pubberrestapi.service;
 
 
+import com.sartyro.pubberrestapi.controller.editdto.OpeningHoursEditDto;
 import com.sartyro.pubberrestapi.controller.editdto.PhotoEditDto;
 import com.sartyro.pubberrestapi.controller.editdto.mappers.PhotoEditDtoMapper;
 import com.sartyro.pubberrestapi.model.Photo;
@@ -27,6 +28,7 @@ public class PhotoService {
     }
     public PhotoEditDto addPhoto(PhotoEditDto drink)
     {
+        drink.setId(PhotoEditDto.EMPTY_ID);
         return PhotoEditDtoMapper.mapToDto(photoRepository.save(PhotoEditDtoMapper.mapToEntity(drink)));
     }
     @Transactional

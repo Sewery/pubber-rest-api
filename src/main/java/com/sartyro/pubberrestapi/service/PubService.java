@@ -36,6 +36,7 @@ public class PubService {
     }
     public PubEditDto addPub(PubEditDto pub)
     {
+        pub.setId(PubEditDto.EMPTY_ID);
         return PubEditDtoMapper.mapToDto(pubRepository.save(PubEditDtoMapper.mapToEntity(pub)));
     }
     @Transactional

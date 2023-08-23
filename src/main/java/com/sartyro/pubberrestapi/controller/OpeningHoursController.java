@@ -42,7 +42,7 @@ public class OpeningHoursController {
     {
         return openingHoursService.patchOpeningHours(openingHours);
     }
-    @DeleteMapping("/openingHours")
+    @DeleteMapping("/openingHours/{id}")
     public void deletePhoto(@PathVariable Long id)
     {
         openingHoursService.deleteOpeningHours(id);

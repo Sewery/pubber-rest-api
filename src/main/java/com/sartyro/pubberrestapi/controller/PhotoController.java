@@ -33,7 +33,7 @@ public class PhotoController {
     {
         return photoService.editPhoto(photo);
     }
-    @DeleteMapping("/photos")
+    @DeleteMapping("/photos/{id}")
     public void deletePhoto(@PathVariable Long id)
     {
         photoService.deletePhoto(id);

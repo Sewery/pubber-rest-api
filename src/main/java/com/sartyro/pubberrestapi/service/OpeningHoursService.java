@@ -2,6 +2,7 @@ package com.sartyro.pubberrestapi.service;
 
 import com.sartyro.pubberrestapi.controller.clientdto.OpeningHoursClientDto;
 import com.sartyro.pubberrestapi.controller.clientdto.mappers.OpeningHoursClientDtoMapper;
+import com.sartyro.pubberrestapi.controller.editdto.DrinkEditDto;
 import com.sartyro.pubberrestapi.controller.editdto.OpeningHoursEditDto;
 import com.sartyro.pubberrestapi.controller.editdto.mappers.OpeningHoursEditDtoMapper;
 import com.sartyro.pubberrestapi.model.OpeningHours;
@@ -34,6 +35,7 @@ public class OpeningHoursService {
     }
 
     public OpeningHoursEditDto addOpeningHours(OpeningHoursEditDto openingHours) {
+        openingHours.setId(OpeningHoursEditDto.EMPTY_ID);
         return OpeningHoursEditDtoMapper
                 .mapToDto(openingHoursRepository
                         .save(OpeningHoursEditDtoMapper
