@@ -1,5 +1,6 @@
 package com.sartyro.pubberrestapi.controller.clientdto;
 
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,9 +10,9 @@ import jakarta.validation.constraints.NotBlank;
 @Builder
 @Getter
 public class RatingsClientDto {
-    @NotBlank
+    @PositiveOrZero
     private Float google;
-    @NotBlank
+    @PositiveOrZero
     private Integer googleCount;
     private Float facebook;
     private Integer facebookCount;

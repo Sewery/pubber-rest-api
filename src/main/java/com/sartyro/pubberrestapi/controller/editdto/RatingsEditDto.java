@@ -1,5 +1,7 @@
 package com.sartyro.pubberrestapi.controller.editdto;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,11 +14,11 @@ import lombok.Setter;
 @Setter
 public class RatingsEditDto {
     public final static Long EMPTY_ID=0L;
-    @NotBlank
+    @PositiveOrZero
     private Long id;
-    @NotBlank
+    @PositiveOrZero
     private Float google;
-    @NotBlank
+    @PositiveOrZero
     private Integer googleCount;
     private Float facebook;
     private Integer facebookCount;

@@ -2,15 +2,17 @@ package com.sartyro.pubberrestapi.controller.editdto.mappers;
 
 import com.sartyro.pubberrestapi.controller.editdto.OpeningHoursEditDto;
 import com.sartyro.pubberrestapi.model.OpeningHours;
+import com.sartyro.pubberrestapi.model.Pub;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OpeningHoursEditDtoMapper {
     public static List<OpeningHoursEditDto> mapToDtoList(List<OpeningHours> openingHours)
     {
-        return openingHours.stream()
+        return openingHours==null?null:new ArrayList<>(openingHours.stream()
                 .map(OpeningHoursEditDtoMapper::mapToDto)
-                .toList();
+                .toList());
     }
     public static OpeningHoursEditDto mapToDto(OpeningHours openingHours)
     {
@@ -23,12 +25,12 @@ public class OpeningHoursEditDtoMapper {
     }
     public static List<OpeningHours> mapToEntityList(List<OpeningHoursEditDto> openingHours)
     {
-        return openingHours.stream()
-                .map(OpeningHoursEditDtoMapper::mapToEntity)
-                .toList();
+        return openingHours==null?null:new ArrayList<>(openingHours.stream()
+                .map(o->OpeningHoursEditDtoMapper.mapToEntity(o,null))
+                .toList());
     }
-    public static OpeningHours mapToEntity(OpeningHoursEditDto openingHours)
+    public static OpeningHours mapToEntity(OpeningHoursEditDto openingHours, Pub pub)
     {
-        return new OpeningHours(openingHours.getId(), openingHours.getWeekday(), openingHours.getTimeOpen(),openingHours.getTimeClose(),null);
+        return new OpeningHours(openingHours.getId(), openingHours.getWeekday(), openingHours.getTimeOpen(),openingHours.getTimeClose(),pub);
     }
 }

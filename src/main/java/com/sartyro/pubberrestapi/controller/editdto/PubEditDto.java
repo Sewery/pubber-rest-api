@@ -1,6 +1,8 @@
 package com.sartyro.pubberrestapi.controller.editdto;
 
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,7 +17,7 @@ import java.util.List;
 @Setter
 public class PubEditDto {
     public final static Long EMPTY_ID=0L;
-    @NotBlank
+    @PositiveOrZero
     private Long id;
     @NotBlank
     private String name;

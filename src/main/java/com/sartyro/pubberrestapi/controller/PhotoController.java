@@ -13,27 +13,33 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PhotoController {
     private final PhotoService photoService;
-    @GetMapping("/photos/*")
+    @GetMapping("pubs/-/photos/*")
     public List<PhotoEditDto> getPhotos()
     {
         return photoService.getPhotos();
     }
-    @GetMapping("/photos/{id}")
+    @GetMapping("pubs/-/photos/{id}")
     public PhotoEditDto getSinglePhoto(@PathVariable @Valid Long id)
     {
         return photoService.getPhoto(id);
     }
-    @PostMapping("/photos")
-    public PhotoEditDto addPhoto(@RequestBody @Valid PhotoEditDto photo)
+    @PostMapping("pubs/{pubId}/photos")
+    public PhotoEditDto addPhoto(@PathVariable Long pubId,@RequestBody @Valid PhotoEditDto photo)
     {
-        return photoService.addPhoto(photo);
+        return photoService.addPhoto(photo,pubId);
     }
-    @PutMapping("/photos")
+    @PutMapping("pubs/-/photos")
     public PhotoEditDto editPhoto(@RequestBody @Valid PhotoEditDto photo)
     {
         return photoService.editPhoto(photo);
     }
-    @DeleteMapping("/photos/{id}")
+
+    @PatchMapping("pubs/-/photos")
+    public PhotoEditDto patchPhoto(@RequestBody PhotoEditDto photo)
+    {
+        return photoService.editPhoto(photo);
+    }
+    @DeleteMapping("pubs/-/photos/{id}")
     public void deletePhoto(@PathVariable Long id)
     {
         photoService.deletePhoto(id);

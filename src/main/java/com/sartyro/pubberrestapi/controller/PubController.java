@@ -46,7 +46,7 @@ public class PubController {
         return pubService.editPub(pub);
     }
     @PatchMapping("/pubs")
-    public PubEditDto patchPub(@RequestBody @Valid PubEditDto pub)
+    public PubEditDto patchPub(@RequestBody PubEditDto pub)
     {
         return pubService.patchPub(pub);
     }

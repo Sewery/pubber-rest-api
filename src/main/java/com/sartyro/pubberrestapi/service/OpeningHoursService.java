@@ -2,12 +2,12 @@ package com.sartyro.pubberrestapi.service;
 
 import com.sartyro.pubberrestapi.controller.clientdto.OpeningHoursClientDto;
 import com.sartyro.pubberrestapi.controller.clientdto.mappers.OpeningHoursClientDtoMapper;
-import com.sartyro.pubberrestapi.controller.editdto.DrinkEditDto;
 import com.sartyro.pubberrestapi.controller.editdto.OpeningHoursEditDto;
 import com.sartyro.pubberrestapi.controller.editdto.mappers.OpeningHoursEditDtoMapper;
 import com.sartyro.pubberrestapi.model.OpeningHours;
 import com.sartyro.pubberrestapi.model.Pub;
 import com.sartyro.pubberrestapi.repository.OpeningHoursRepository;
+import com.sartyro.pubberrestapi.repository.PubRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +20,7 @@ import java.util.stream.StreamSupport;
 @RequiredArgsConstructor
 public class OpeningHoursService {
     private final OpeningHoursRepository openingHoursRepository;
+    private final PubRepository pubRepository;
 
     public List<OpeningHoursEditDto> getAllOpeningHours() {
         return OpeningHoursEditDtoMapper
@@ -34,12 +35,10 @@ public class OpeningHoursService {
                 .mapToDto(openingHoursRepository.findById(id).orElseThrow());
     }
 
-    public OpeningHoursEditDto addOpeningHours(OpeningHoursEditDto openingHours) {
-        openingHours.setId(OpeningHoursEditDto.EMPTY_ID);
+    public OpeningHoursEditDto addOpeningHours(OpeningHoursEditDto openingHours , Long pubId) {
+        Pub pub= pubRepository.findById(pubId).orElseThrow();
         return OpeningHoursEditDtoMapper
-                .mapToDto(openingHoursRepository
-                        .save(OpeningHoursEditDtoMapper
-                            .mapToEntity(openingHours)));
+                .mapToDto(openingHoursRepository.save(OpeningHoursEditDtoMapper.mapToEntity(openingHours,pub)));
     }
 
 

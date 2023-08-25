@@ -1,11 +1,12 @@
 package com.sartyro.pubberrestapi.service;
 
 
-import com.sartyro.pubberrestapi.controller.editdto.OpeningHoursEditDto;
 import com.sartyro.pubberrestapi.controller.editdto.PhotoEditDto;
 import com.sartyro.pubberrestapi.controller.editdto.mappers.PhotoEditDtoMapper;
 import com.sartyro.pubberrestapi.model.Photo;
+import com.sartyro.pubberrestapi.model.Pub;
 import com.sartyro.pubberrestapi.repository.PhotoRepository;
+import com.sartyro.pubberrestapi.repository.PubRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.util.stream.StreamSupport;
 @RequiredArgsConstructor
 public class PhotoService {
     private final PhotoRepository photoRepository;
+    private final PubRepository pubRepository;
     public List<PhotoEditDto> getPhotos()
     {
         return PhotoEditDtoMapper.mapToDtoList(StreamSupport.stream(photoRepository.findAll().spliterator(),false)
@@ -26,10 +28,10 @@ public class PhotoService {
     {
         return PhotoEditDtoMapper.mapToDto(photoRepository.findById(id).orElseThrow());
     }
-    public PhotoEditDto addPhoto(PhotoEditDto drink)
+    public PhotoEditDto addPhoto(PhotoEditDto drink, Long pubId)
     {
-        drink.setId(PhotoEditDto.EMPTY_ID);
-        return PhotoEditDtoMapper.mapToDto(photoRepository.save(PhotoEditDtoMapper.mapToEntity(drink)));
+        Pub pub= pubRepository.findById(pubId).orElseThrow();
+        return PhotoEditDtoMapper.mapToDto(photoRepository.save(PhotoEditDtoMapper.mapToEntity(drink,pub)));
     }
     @Transactional
     public PhotoEditDto editPhoto(PhotoEditDto drink)

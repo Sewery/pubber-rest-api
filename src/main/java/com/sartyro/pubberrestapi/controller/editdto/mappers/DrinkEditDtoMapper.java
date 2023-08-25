@@ -3,14 +3,15 @@ package com.sartyro.pubberrestapi.controller.editdto.mappers;
 import com.sartyro.pubberrestapi.controller.editdto.DrinkEditDto;
 import com.sartyro.pubberrestapi.model.Drink;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DrinkEditDtoMapper {
     public static List<DrinkEditDto> mapToDtoList(List<Drink> drink)
     {
-        return drink.stream()
+        return drink==null?null:new ArrayList<>(drink.stream()
                 .map(DrinkEditDtoMapper::mapToDto)
-                .toList();
+                .toList());
     }
     public static DrinkEditDto mapToDto(Drink drink)
     {
@@ -22,9 +23,9 @@ public class DrinkEditDtoMapper {
     }
     public static  List<Drink> mapToEntityList(List<DrinkEditDto> drink)
     {
-        return drink.stream()
+        return drink==null?null:new ArrayList<>(drink.stream()
                 .map(DrinkEditDtoMapper::mapToEntity)
-                .toList();
+                .toList());
     }
     public static Drink mapToEntity(DrinkEditDto drink)
     {

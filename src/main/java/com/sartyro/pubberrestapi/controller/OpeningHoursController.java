@@ -17,33 +17,33 @@ import java.util.List;
 public class OpeningHoursController {
     private final OpeningHoursService openingHoursService;
 
-    @GetMapping("/openingHours/*")
+    @GetMapping("pubs/-/openingHours/*")
     public List<OpeningHoursEditDto> getOpeningHours()
     {
         return openingHoursService.getAllOpeningHours();
     }
-    @GetMapping("/openingHours/{id}")
-    public OpeningHoursEditDto getSinglePhoto(@PathVariable Long id)
+    @GetMapping("pubs/-/openingHours/{id}")
+    public OpeningHoursEditDto getSingleOpeningHours(@PathVariable Long id)
     {
         return openingHoursService.getOpeningHours(id);
     }
-    @PostMapping("/openingHours")
-    public OpeningHoursEditDto addPhoto(@RequestBody @Valid OpeningHoursEditDto openingHours)
+    @PostMapping("pubs/{pubId}/openingHours")
+    public OpeningHoursEditDto addOpeningHours(@PathVariable Long pubId,@RequestBody @Valid OpeningHoursEditDto openingHours)
     {
-        return openingHoursService.addOpeningHours(openingHours);
+        return openingHoursService.addOpeningHours(openingHours,pubId);
     }
-    @PutMapping("/openingHours")
-    public OpeningHoursEditDto editPhoto(@RequestBody @Valid OpeningHoursEditDto openingHours)
+    @PutMapping("pubs/-/openingHours")
+    public OpeningHoursEditDto editOpeningHours(@RequestBody @Valid OpeningHoursEditDto openingHours)
     {
         return openingHoursService.editOpeningHours(openingHours);
     }
-    @PatchMapping("/openingHours")
-    public OpeningHoursEditDto patchPub(@RequestBody @Valid OpeningHoursEditDto openingHours)
+    @PatchMapping("pubs/-/openingHours")
+    public OpeningHoursEditDto patchOpeningHours(@RequestBody OpeningHoursEditDto openingHours)
     {
         return openingHoursService.patchOpeningHours(openingHours);
     }
-    @DeleteMapping("/openingHours/{id}")
-    public void deletePhoto(@PathVariable Long id)
+    @DeleteMapping("pubs/-/openingHours/{id}")
+    public void deleteOpeningHours(@PathVariable Long id)
     {
         openingHoursService.deleteOpeningHours(id);
     }

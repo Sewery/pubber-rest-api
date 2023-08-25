@@ -38,7 +38,7 @@ public class DrinkController {
         return drinkService.editDrink(drink);
     }
     @PatchMapping("/drinks")
-    public DrinkEditDto patchDrink(@RequestBody @Valid DrinkEditDto drink)
+    public DrinkEditDto patchDrink(@RequestBody DrinkEditDto drink)
     {
         return drinkService.patchDrink(drink);
     }

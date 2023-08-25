@@ -23,6 +23,11 @@ public class RatingsEditDtoMapper {
     }
     public static Ratings mapToEntity(RatingsEditDto ratings)
     {
-        return null;
+        return ratings==null?null:new Ratings(ratings.getId(), ratings.getGoogle(), ratings.getGoogleCount(),
+                ratings.getFacebook(), ratings.getFacebookCount(),
+                ratings.getTripAdvisor(), ratings.getTripAdvisorCount(),
+                ratings.getUntapped(), ratings.getUntappedCount(),
+                ratings.getOurDrinksQuality(), ratings.getOurServiceQuality(),
+                ratings.getOurCost());
     }
 }

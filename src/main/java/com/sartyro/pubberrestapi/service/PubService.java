@@ -5,6 +5,7 @@ import com.sartyro.pubberrestapi.controller.clientdto.mappers.PubClientDtoMapper
 import com.sartyro.pubberrestapi.controller.editdto.PubEditDto;
 import com.sartyro.pubberrestapi.controller.editdto.mappers.PubEditDtoMapper;
 import com.sartyro.pubberrestapi.model.Pub;
+import com.sartyro.pubberrestapi.model.Ratings;
 import com.sartyro.pubberrestapi.repository.PubRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PubService {
     private final PubRepository pubRepository;
+
 
     public List<PubClientDto> getPubDtoListOptimized()
     {
@@ -88,7 +90,7 @@ public class PubService {
         if(mapped.getOpeningHours()!=null) {
             patched.setOpeningHours(mapped.getOpeningHours());
         }
-        if(mapped.getName()!=null) {
+        if(mapped.getPhotos()!=null) {
             patched.setPhotos(mapped.getPhotos());
         }
         if(mapped.getDescription()!=null) {
@@ -107,10 +109,42 @@ public class PubService {
             patched.setIconUrl(mapped.getIconUrl());
         }
         if(mapped.getRating()!=null) {
-            patched.setRating(mapped.getRating());
+            Ratings ratings=mapped.getRating();
+            if(ratings.getGoogle()!=null) {
+                patched.getRating().setGoogle(ratings.getGoogle());
+            }
+            if(ratings.getGoogleCount()!=null) {
+                patched.getRating().setGoogleCount(ratings.getGoogleCount());
+            }
+            if(ratings.getFacebook()!=null) {
+                patched.getRating().setFacebook(ratings.getFacebook());
+            }
+            if(ratings.getFacebookCount()!=null) {
+                patched.getRating().setFacebookCount(ratings.getFacebookCount());
+            }
+            if(ratings.getUntapped()!=null) {
+                patched.getRating().setUntapped(ratings.getUntapped());
+            }
+            if(ratings.getUntappedCount()!=null) {
+                patched.getRating().setUntappedCount(ratings.getUntappedCount());
+            }
+            if(ratings.getTripAdvisor()!=null) {
+                patched.getRating().setTripAdvisor(ratings.getTripAdvisor());
+            }
+            if(ratings.getTripAdvisorCount()!=null) {
+                patched.getRating().setTripAdvisorCount(ratings.getTripAdvisorCount());
+            }
+            if(ratings.getOurDrinkQuality()!=null) {
+                patched.getRating().setOurDrinkQuality(ratings.getOurDrinkQuality());
+            }
+            if(ratings.getOurServiceQuality()!=null) {
+                patched.getRating().setOurServiceQuality(ratings.getOurServiceQuality());
+            }
+            if(ratings.getOurCost()!=null) {
+                patched.getRating().setOurCost(ratings.getOurCost());
+            }
         }
-        pubRepository.save(patched);
-        return PubEditDtoMapper.mapToDto(patched);
+        return PubEditDtoMapper.mapToDto(pubRepository.save(patched));
     }
     public void deletePub(Long id)
     {

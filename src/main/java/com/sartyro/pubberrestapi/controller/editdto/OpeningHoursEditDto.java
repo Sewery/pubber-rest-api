@@ -2,6 +2,7 @@ package com.sartyro.pubberrestapi.controller.editdto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,7 +16,7 @@ import java.time.LocalTime;
 @Setter
 public class OpeningHoursEditDto {
     public final static Long EMPTY_ID=0L;
-    @NotBlank
+    @PositiveOrZero
     private Long id;
     @NotBlank
     private String weekday;
