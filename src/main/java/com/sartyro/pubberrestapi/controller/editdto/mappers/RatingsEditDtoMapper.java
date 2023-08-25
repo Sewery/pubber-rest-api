@@ -6,7 +6,7 @@ import com.sartyro.pubberrestapi.model.Ratings;
 public class RatingsEditDtoMapper {
     public static RatingsEditDto mapToDto(Ratings ratings)
     {
-        return RatingsEditDto.builder()
+        return ratings==null?null:RatingsEditDto.builder()
                 .id(ratings.getId())
                 .google(ratings.getGoogle())
                 .googleCount(ratings.getGoogleCount())
