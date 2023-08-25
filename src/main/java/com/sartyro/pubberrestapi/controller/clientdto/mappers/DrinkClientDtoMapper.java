@@ -8,7 +8,7 @@ import java.util.List;
 public class DrinkClientDtoMapper {
     public static List<DrinkClientDto> mapToDtoList(List<Drink> drink)
     {
-        return drink.stream()
+        return drink==null?null:drink.stream()
                 .map(DrinkClientDtoMapper::mapToDto)
                 .toList();
     }

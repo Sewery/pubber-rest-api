@@ -38,7 +38,7 @@ public class Pub {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_rating")
     private Ratings rating;
-    @OneToMany(mappedBy = "pub",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "pub",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<OpeningHours> openingHours;
     @ManyToMany

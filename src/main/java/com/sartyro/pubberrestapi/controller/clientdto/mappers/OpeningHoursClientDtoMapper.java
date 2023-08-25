@@ -8,7 +8,7 @@ import java.util.List;
 public class OpeningHoursClientDtoMapper {
     public static List<OpeningHoursClientDto> mapToDtoList(List<OpeningHours> openingHours)
     {
-        return openingHours.stream()
+        return null==openingHours?null:openingHours.stream()
                 .map(OpeningHoursClientDtoMapper::mapToDto)
                 .toList();
     }

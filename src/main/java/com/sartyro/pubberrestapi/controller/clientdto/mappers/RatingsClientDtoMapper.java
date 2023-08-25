@@ -6,7 +6,7 @@ import com.sartyro.pubberrestapi.model.Ratings;
 public class RatingsClientDtoMapper {
     public static RatingsClientDto mapToDto(Ratings ratings)
     {
-        return RatingsClientDto.builder()
+        return null==ratings?null:RatingsClientDto.builder()
                 .google(ratings.getGoogle())
                 .googleCount(ratings.getGoogleCount())
                 .facebook(ratings.getFacebook())

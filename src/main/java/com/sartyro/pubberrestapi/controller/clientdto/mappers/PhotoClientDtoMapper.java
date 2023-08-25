@@ -8,7 +8,7 @@ import java.util.List;
 public class PhotoClientDtoMapper {
     public static List<PhotoClientDto> mapToDtoList(List<Photo> photos)
     {
-        return photos.stream()
+        return null==photos?null:photos.stream()
                 .map(PhotoClientDtoMapper::mapToDto)
                 .toList();
     }

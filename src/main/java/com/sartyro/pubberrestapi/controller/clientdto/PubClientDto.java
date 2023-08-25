@@ -1,6 +1,7 @@
 package com.sartyro.pubberrestapi.controller.clientdto;
 
 
+import jakarta.validation.constraints.Positive;
 import lombok.*;
 
 
@@ -11,13 +12,12 @@ import java.util.List;
 @Getter
 @Builder
 public class PubClientDto {
-    @NotBlank
+    @Positive
     private Long id;
     @NotBlank
     private String name;
     @NotBlank
     private String address;
-    @NotBlank
     private String placeId;
     @NotBlank
     private String city;

@@ -5,16 +5,19 @@ import com.sartyro.pubberrestapi.controller.editdto.PubEditDto;
 import com.sartyro.pubberrestapi.service.PubService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
+import java.util.logging.Logger;
 
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class PubController {
     private final PubService pubService;
 
@@ -26,6 +29,7 @@ public class PubController {
             pubs=pubService.getPubDtoListOptimized();
         }catch(Exception e)
         {
+            log.error(e.getLocalizedMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>( pubs, HttpStatus.OK);

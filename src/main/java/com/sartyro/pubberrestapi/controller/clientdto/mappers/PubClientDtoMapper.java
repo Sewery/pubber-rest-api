@@ -23,6 +23,7 @@ public class PubClientDtoMapper {
                 .placeId(pub.getPlaceId())
                 .city(pub.getCity())
                 .address(pub.getAddress())
+                .city(pub.getCity())
                 .websiteUrl(pub.getWebsiteUrl())
                 .phoneNumber(pub.getPhoneNumber())
                 .description(pub.getDescription())
