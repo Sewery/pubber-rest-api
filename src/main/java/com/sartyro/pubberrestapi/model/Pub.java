@@ -35,7 +35,7 @@ public class Pub {
     private String description;
     private Boolean reservable;
     private Boolean takeout;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
     @JoinColumn(name = "id_rating")
     private Ratings rating;
     @OneToMany(mappedBy = "pub",fetch = FetchType.EAGER, cascade = CascadeType.ALL)

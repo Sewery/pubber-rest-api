@@ -55,12 +55,8 @@ public class OpeningHoursService {
     @Transactional
     public OpeningHoursEditDto patchOpeningHours(OpeningHoursEditDto openingHours) {
         OpeningHours patched = openingHoursRepository.findById(openingHours.getId()).orElseThrow();
-        if (openingHours.getTimeOpen() != null) {
-            patched.setTimeOpen(openingHours.getTimeOpen());
-        }
-        if (openingHours.getTimeClose() != null) {
-            patched.setTimeClose(openingHours.getTimeClose());
-        }
+        patched.setTimeOpen(openingHours.getTimeOpen());
+        patched.setTimeClose(openingHours.getTimeClose());
         if (openingHours.getWeekday() != null) {
             patched.setWeekday(openingHours.getWeekday());
         }

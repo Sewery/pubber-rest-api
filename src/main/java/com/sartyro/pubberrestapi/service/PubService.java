@@ -75,6 +75,9 @@ public class PubService {
         if(mapped.getCity()!=null) {
             patched.setCity(mapped.getCity());
         }
+        if(mapped.getWebsiteUrl()!=null) {
+            patched.setWebsiteUrl(mapped.getWebsiteUrl());
+        }
         if(mapped.getReservable()!=null) {
             patched.setReservable(mapped.getReservable());
         }
@@ -98,9 +101,6 @@ public class PubService {
         }
         if(mapped.getPlaceId()!=null) {
             patched.setPlaceId(mapped.getPlaceId());
-        }
-        if(mapped.getName()!=null) {
-            patched.setWebsiteUrl(mapped.getWebsiteUrl());
         }
         if(mapped.getPhoneNumber()!=null) {
             patched.setPhoneNumber(mapped.getPhoneNumber());
@@ -150,5 +150,4 @@ public class PubService {
     {
         pubRepository.deleteById(id);
     }
-    //public Pub editPub(pub )
 }
