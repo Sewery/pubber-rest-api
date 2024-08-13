@@ -1,9 +1,12 @@
 package com.sartyro.pubberrestapi.controller.clientdto;
 
 import lombok.Builder;
+
 import lombok.Getter;
 
 import jakarta.validation.constraints.NotBlank;
+
+import java.util.List;
 
 @Builder
 @Getter
@@ -12,4 +15,7 @@ public class DrinkClientDto {
     private String name;
     @NotBlank
     private String type;
+    @NotBlank
+    private String description;
+    private List<DrinkStylesClientDto> drinkStyles;
 }

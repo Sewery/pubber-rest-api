@@ -4,6 +4,9 @@ import com.sartyro.pubberrestapi.controller.editdto.RatingsEditDto;
 import com.sartyro.pubberrestapi.model.Ratings;
 
 public class RatingsEditDtoMapper {
+    private RatingsEditDtoMapper() {
+        throw new IllegalStateException("Utility class, calling constructor forbidden");
+    }
     public static RatingsEditDto mapToDto(Ratings ratings)
     {
         return ratings==null?null:RatingsEditDto.builder()

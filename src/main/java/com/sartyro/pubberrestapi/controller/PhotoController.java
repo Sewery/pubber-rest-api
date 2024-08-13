@@ -4,13 +4,16 @@ import com.sartyro.pubberrestapi.controller.editdto.PhotoEditDto;
 import com.sartyro.pubberrestapi.model.Drink;
 import com.sartyro.pubberrestapi.model.Photo;
 import com.sartyro.pubberrestapi.service.PhotoService;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import java.util.List;
 @RestController
 @RequiredArgsConstructor
+@Validated
 public class PhotoController {
     private final PhotoService photoService;
     @GetMapping("pubs/-/photos/*")
@@ -19,7 +22,7 @@ public class PhotoController {
         return photoService.getPhotos();
     }
     @GetMapping("pubs/-/photos/{id}")
-    public PhotoEditDto getSinglePhoto(@PathVariable @Valid Long id)
+    public PhotoEditDto getSinglePhoto(@PathVariable @Positive Long id)
     {
         return photoService.getPhoto(id);
     }
@@ -40,7 +43,7 @@ public class PhotoController {
         return photoService.editPhoto(photo);
     }
     @DeleteMapping("pubs/-/photos/{id}")
-    public void deletePhoto(@PathVariable Long id)
+    public void deletePhoto(@PathVariable @Positive Long id)
     {
         photoService.deletePhoto(id);
     }

@@ -1,9 +1,10 @@
 package com.sartyro.pubberrestapi.service;
 
-import com.sartyro.pubberrestapi.controller.clientdto.OpeningHoursClientDto;
-import com.sartyro.pubberrestapi.controller.clientdto.mappers.OpeningHoursClientDtoMapper;
 import com.sartyro.pubberrestapi.controller.editdto.OpeningHoursEditDto;
 import com.sartyro.pubberrestapi.controller.editdto.mappers.OpeningHoursEditDtoMapper;
+import com.sartyro.pubberrestapi.exception.EntityIdNotFoundException;
+import com.sartyro.pubberrestapi.exception.NullFieldException;
+import com.sartyro.pubberrestapi.model.DrinkStyles;
 import com.sartyro.pubberrestapi.model.OpeningHours;
 import com.sartyro.pubberrestapi.model.Pub;
 import com.sartyro.pubberrestapi.repository.OpeningHoursRepository;
@@ -11,7 +12,6 @@ import com.sartyro.pubberrestapi.repository.PubRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 
 import java.util.List;
 import java.util.stream.StreamSupport;
@@ -32,11 +32,13 @@ public class OpeningHoursService {
 
     public OpeningHoursEditDto getOpeningHours(Long id) {
         return OpeningHoursEditDtoMapper
-                .mapToDto(openingHoursRepository.findById(id).orElseThrow());
+                .mapToDto(openingHoursRepository.findById(id)
+                        .orElseThrow(()->new EntityIdNotFoundException(OpeningHours.class,id)));
     }
 
     public OpeningHoursEditDto addOpeningHours(OpeningHoursEditDto openingHours , Long pubId) {
-        Pub pub= pubRepository.findById(pubId).orElseThrow();
+        Pub pub= pubRepository.findById(pubId)
+                .orElseThrow(()->new EntityIdNotFoundException(Pub.class,pubId));
         return OpeningHoursEditDtoMapper
                 .mapToDto(openingHoursRepository.save(OpeningHoursEditDtoMapper.mapToEntity(openingHours,pub)));
     }
@@ -45,7 +47,11 @@ public class OpeningHoursService {
 
     @Transactional
     public OpeningHoursEditDto  editOpeningHours(OpeningHoursEditDto openingHours) {
-        OpeningHours edited = openingHoursRepository.findById(openingHours.getId()).orElseThrow();
+        if(openingHours==null || openingHours.getId()==null){
+            throw new NullFieldException(OpeningHours.class,"id");
+        }
+        OpeningHours edited = openingHoursRepository.findById(openingHours.getId())
+                .orElseThrow(()->new EntityIdNotFoundException(OpeningHours.class,openingHours.getId()));
         edited.setTimeOpen(openingHours.getTimeOpen());
         edited.setTimeClose(openingHours.getTimeClose());
         edited.setWeekday(openingHours.getWeekday());
@@ -54,7 +60,11 @@ public class OpeningHoursService {
     }
     @Transactional
     public OpeningHoursEditDto patchOpeningHours(OpeningHoursEditDto openingHours) {
-        OpeningHours patched = openingHoursRepository.findById(openingHours.getId()).orElseThrow();
+        if(openingHours==null || openingHours.getId()==null){
+            throw new NullFieldException(OpeningHours.class,"id");
+        }
+        OpeningHours patched = openingHoursRepository.findById(openingHours.getId())
+                .orElseThrow(()->new EntityIdNotFoundException(OpeningHours.class,openingHours.getId()));
         if (openingHours.getTimeOpen() != null) {
             patched.setTimeOpen(openingHours.getTimeOpen());
         }

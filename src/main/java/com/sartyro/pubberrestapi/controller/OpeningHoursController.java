@@ -6,7 +6,9 @@ import com.sartyro.pubberrestapi.model.OpeningHours;
 import com.sartyro.pubberrestapi.model.Photo;
 import com.sartyro.pubberrestapi.model.Pub;
 import com.sartyro.pubberrestapi.service.OpeningHoursService;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
@@ -14,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Validated
 public class OpeningHoursController {
     private final OpeningHoursService openingHoursService;
 
@@ -23,12 +26,12 @@ public class OpeningHoursController {
         return openingHoursService.getAllOpeningHours();
     }
     @GetMapping("pubs/-/openingHours/{id}")
-    public OpeningHoursEditDto getSingleOpeningHours(@PathVariable Long id)
+    public OpeningHoursEditDto getSingleOpeningHours(@PathVariable @Positive Long id)
     {
         return openingHoursService.getOpeningHours(id);
     }
     @PostMapping("pubs/{pubId}/openingHours")
-    public OpeningHoursEditDto addOpeningHours(@PathVariable Long pubId,@RequestBody @Valid OpeningHoursEditDto openingHours)
+    public OpeningHoursEditDto addOpeningHours(@PathVariable @Positive Long pubId,@RequestBody @Valid OpeningHoursEditDto openingHours)
     {
         return openingHoursService.addOpeningHours(openingHours,pubId);
     }
@@ -43,7 +46,7 @@ public class OpeningHoursController {
         return openingHoursService.patchOpeningHours(openingHours);
     }
     @DeleteMapping("pubs/-/openingHours/{id}")
-    public void deleteOpeningHours(@PathVariable Long id)
+    public void deleteOpeningHours(@PathVariable @Positive Long id)
     {
         openingHoursService.deleteOpeningHours(id);
     }

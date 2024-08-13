@@ -1,13 +1,16 @@
 package com.sartyro.pubberrestapi.controller.editdto.mappers;
 
 import com.sartyro.pubberrestapi.controller.editdto.*;
+import com.sartyro.pubberrestapi.model.Geolocation;
 import com.sartyro.pubberrestapi.model.Pub;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PubEditDtoMapper {
-    private PubEditDtoMapper() {}
+    private PubEditDtoMapper() {
+        throw new IllegalStateException("Utility class, calling constructor forbidden");
+    }
 
     public static List<PubEditDto> mapToDtoList(List<Pub> pubs)
     {
@@ -27,6 +30,8 @@ public class PubEditDtoMapper {
                 .websiteUrl(pub.getWebsiteUrl())
                 .phoneNumber(pub.getPhoneNumber())
                 .description(pub.getDescription())
+                .latitude(pub.getGeoLocation().getLatitude())
+                .longitude(pub.getGeoLocation().getLongitude())
                 .iconUrl(pub.getIconUrl())
                 .reservable(pub.getReservable())
                 .takeout(pub.getReservable())
@@ -47,6 +52,10 @@ public class PubEditDtoMapper {
         return new Pub(PubEditDto.EMPTY_ID, pub.getPlaceId(),pub.getCity(), pub.getAddress(), pub.getName(),
                 pub.getPhoneNumber(), pub.getWebsiteUrl(),
                 pub.getIconUrl(), pub.getDescription(),
+                Geolocation.builder()
+                        .latitude(pub.getLatitude())
+                        .longitude(pub.getLongitude())
+                        .build(),
                 pub.getReservable(),pub.getTakeout(),
                 RatingsEditDtoMapper.mapToEntity(pub.getRatings()),OpeningHoursEditDtoMapper.mapToEntityList(pub.getOpeningHours()),
                 DrinkEditDtoMapper.mapToEntityList(pub.getDrinks()),PhotoEditDtoMapper.mapToEntityList(pub.getPhotos()));

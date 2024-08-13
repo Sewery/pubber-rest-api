@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OpeningHoursEditDtoMapper {
+    private OpeningHoursEditDtoMapper() {
+        throw new IllegalStateException("Utility class, calling constructor forbidden");
+    }
     public static List<OpeningHoursEditDto> mapToDtoList(List<OpeningHours> openingHours)
     {
         return openingHours==null?null:new ArrayList<>(openingHours.stream()

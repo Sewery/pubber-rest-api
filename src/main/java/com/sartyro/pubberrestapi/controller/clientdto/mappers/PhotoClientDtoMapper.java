@@ -6,6 +6,9 @@ import com.sartyro.pubberrestapi.model.Photo;
 import java.util.List;
 
 public class PhotoClientDtoMapper {
+    private PhotoClientDtoMapper() {
+        throw new IllegalStateException("Utility class, calling constructor forbidden");
+    }
     public static List<PhotoClientDto> mapToDtoList(List<Photo> photos)
     {
         return null==photos?null:photos.stream()

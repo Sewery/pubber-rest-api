@@ -6,6 +6,9 @@ import com.sartyro.pubberrestapi.model.OpeningHours;
 import java.util.List;
 
 public class OpeningHoursClientDtoMapper {
+    private OpeningHoursClientDtoMapper() {
+        throw new IllegalStateException("Utility class, calling constructor forbidden");
+    }
     public static List<OpeningHoursClientDto> mapToDtoList(List<OpeningHours> openingHours)
     {
         return null==openingHours?null:openingHours.stream()

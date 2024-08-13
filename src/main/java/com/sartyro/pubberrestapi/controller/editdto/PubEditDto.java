@@ -34,6 +34,8 @@ public class PubEditDto {
     @Pattern(regexp = "^(https?:\\/\\/).*")
     private String iconUrl;
     private String description;
+    private Double latitude;
+    private Double longitude;
     private Boolean reservable;
     private Boolean takeout;
     private RatingsEditDto ratings;

@@ -3,13 +3,15 @@ package com.sartyro.pubberrestapi.controller.editdto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 
 @Builder
-@Getter
-@Setter
+@Data
 public class DrinkEditDto {
     public final static Long EMPTY_ID=0L;
     @PositiveOrZero
@@ -18,4 +20,7 @@ public class DrinkEditDto {
     private String name;
     @NotBlank
     private String type;
+    @NotBlank
+    private String description;
+    private List<DrinkStylesEditDto> drinkStyles;
 }

@@ -19,7 +19,5 @@ public interface PubRepository extends JpaRepository<Pub, Long> {
     List<Pub> findAllPubsFetchRating();
     @Query("SELECT p FROM Pub p LEFT JOIN FETCH p.drinks")
     List<Pub> findAllPubsFetchDrinks();
-
-
 }
 

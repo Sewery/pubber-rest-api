@@ -22,17 +22,9 @@ public class PubController {
     private final PubService pubService;
 
     @GetMapping("/pubs/*")
-    public ResponseEntity<List<PubClientDto>> getPubs()
+    public List<PubClientDto> getPubs()
     {
-        List<PubClientDto> pubs;
-        try {
-            pubs=pubService.getPubDtoListOptimized();
-        }catch(Exception e)
-        {
-            log.error(e.getLocalizedMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<>( pubs, HttpStatus.OK);
+        return pubService.getPubDtoListOptimized();
     }
     @GetMapping("/pubs/{id}")
     public PubEditDto getSinglePub(@PathVariable Long id)

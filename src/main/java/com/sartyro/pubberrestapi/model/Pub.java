@@ -1,14 +1,18 @@
 package com.sartyro.pubberrestapi.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import java.util.List;
 
 @Entity
@@ -25,6 +29,7 @@ public class Pub {
     private String placeId;
     private String city;
     private String address;
+    @Column(name = "pub_name")
     private String name;
     @Column(name = "phone_number")
     private String phoneNumber;
@@ -33,12 +38,18 @@ public class Pub {
     @Column(name = "icon_url")
     private String iconUrl;
     private String description;
+    @Embedded
+    @JsonUnwrapped
+    private Geolocation geoLocation;
     private Boolean reservable;
     private Boolean takeout;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL)
     @JoinColumn(name = "id_rating")
     private Ratings rating;
-    @OneToMany(mappedBy = "pub",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "pub",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<OpeningHours> openingHours;
     @ManyToMany
@@ -47,8 +58,10 @@ public class Pub {
             inverseJoinColumns = @JoinColumn(name = "id_drink")
     )
     private List<Drink> drinks;
-
-    @OneToMany(mappedBy = "pub",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "pub",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL)
+    @Fetch(value = FetchMode.SUBSELECT)
     @JsonManagedReference
     private List<Photo> photos;
 

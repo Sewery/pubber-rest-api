@@ -6,7 +6,9 @@ import com.sartyro.pubberrestapi.model.Pub;
 import java.util.List;
 
 public class PubClientDtoMapper {
-    private PubClientDtoMapper() {}
+    private PubClientDtoMapper() {
+        throw new IllegalStateException("Utility class, calling constructor forbidden");
+    }
 
     public static List<PubClientDto> mapToDtoList(List<Pub> pubs)
     {
@@ -27,6 +29,8 @@ public class PubClientDtoMapper {
                 .websiteUrl(pub.getWebsiteUrl())
                 .phoneNumber(pub.getPhoneNumber())
                 .description(pub.getDescription())
+                .latitude(pub.getGeoLocation().getLatitude())
+                .longitude(pub.getGeoLocation().getLongitude())
                 .iconUrl(pub.getIconUrl())
                 .reservable(pub.getReservable())
                 .takeout(pub.getReservable())

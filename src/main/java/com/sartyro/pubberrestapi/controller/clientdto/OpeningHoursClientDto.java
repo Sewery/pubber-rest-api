@@ -11,7 +11,6 @@ import java.time.LocalTime;
 @Builder
 @Getter
 public class OpeningHoursClientDto {
-
     @NotBlank
     private String weekday;
     @NotBlank

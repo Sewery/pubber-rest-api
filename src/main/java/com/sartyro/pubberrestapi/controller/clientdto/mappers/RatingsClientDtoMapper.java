@@ -4,6 +4,9 @@ import com.sartyro.pubberrestapi.controller.clientdto.RatingsClientDto;
 import com.sartyro.pubberrestapi.model.Ratings;
 
 public class RatingsClientDtoMapper {
+    private RatingsClientDtoMapper() {
+        throw new IllegalStateException("Utility class, calling constructor forbidden");
+    }
     public static RatingsClientDto mapToDto(Ratings ratings)
     {
         return null==ratings?null:RatingsClientDto.builder()

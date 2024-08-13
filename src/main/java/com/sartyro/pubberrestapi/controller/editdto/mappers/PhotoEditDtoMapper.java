@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PhotoEditDtoMapper {
+    private PhotoEditDtoMapper() {
+        throw new IllegalStateException("Utility class, calling constructor forbidden");
+    }
     public static List<PhotoEditDto> mapToDtoList(List<Photo> photos)
     {
         return photos==null?null:new ArrayList<>(photos.stream()

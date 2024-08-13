@@ -4,6 +4,9 @@ import com.sartyro.pubberrestapi.controller.clientdto.PubClientDto;
 import com.sartyro.pubberrestapi.controller.clientdto.mappers.PubClientDtoMapper;
 import com.sartyro.pubberrestapi.controller.editdto.PubEditDto;
 import com.sartyro.pubberrestapi.controller.editdto.mappers.PubEditDtoMapper;
+import com.sartyro.pubberrestapi.exception.EntityIdNotFoundException;
+import com.sartyro.pubberrestapi.exception.NullFieldException;
+import com.sartyro.pubberrestapi.model.Photo;
 import com.sartyro.pubberrestapi.model.Pub;
 import com.sartyro.pubberrestapi.model.Ratings;
 import com.sartyro.pubberrestapi.repository.PubRepository;
@@ -19,13 +22,12 @@ import java.util.List;
 public class PubService {
     private final PubRepository pubRepository;
 
-
     public List<PubClientDto> getPubDtoListOptimized()
     {
         List<Pub> pubs =pubRepository.findAllPubsFetchOpeningHours();
-        pubs =pubRepository.findAllPubsFetchPhotos();
-        pubs =pubRepository.findAllPubsFetchRating();
-        pubs =pubRepository.findAllPubsFetchDrinks();
+        //pubRepository.findAllPubsFetchPhotos();
+        //pubRepository.findAllPubsFetchRating();
+        pubRepository.findAllPubsFetchDrinks();
         return PubClientDtoMapper.mapToDtoList(pubs);
     }
     public List<PubClientDto> getPubDtoList()
@@ -34,20 +36,25 @@ public class PubService {
     }
     public PubEditDto getSinglePub(Long id)
     {
-        return PubEditDtoMapper.mapToDto( pubRepository.findById(id).orElseThrow());
+        return PubEditDtoMapper.mapToDto( pubRepository.findById(id).orElseThrow(()->new EntityIdNotFoundException(Pub.class,id)));
     }
     public PubEditDto addPub(PubEditDto pub)
     {
-        pub.setId(PubEditDto.EMPTY_ID);
+//        pub.setId(PubEditDto.EMPTY_ID);
         return PubEditDtoMapper.mapToDto(pubRepository.save(PubEditDtoMapper.mapToEntity(pub)));
     }
     @Transactional
     public PubEditDto editPub(PubEditDto pub)
     {
-        Pub edited=pubRepository.findById(pub.getId()).orElseThrow();
+        if(pub==null || pub.getId()==null){
+            throw new NullFieldException(Pub.class,"id");
+        }
+        Pub edited=pubRepository.findById(pub.getId())
+                .orElseThrow(()->new EntityIdNotFoundException(Pub.class,pub.getId()));
         Pub mapped=PubEditDtoMapper.mapToEntity(pub);
         edited.setName(mapped.getName());
         edited.setAddress(mapped.getAddress());
+        edited.setGeoLocation(mapped.getGeoLocation());
         edited.setCity(mapped.getCity());
         edited.setReservable(mapped.getReservable());
         edited.setTakeout(mapped.getTakeout());
@@ -67,7 +74,10 @@ public class PubService {
     @Transactional
     public PubEditDto patchPub(PubEditDto pub)
     {
-        Pub patched=pubRepository.findById(pub.getId()).orElseThrow();
+        if(pub==null || pub.getId()==null){
+            throw new NullFieldException(Pub.class,"id");
+        }
+        Pub patched=pubRepository.findById(pub.getId()).orElseThrow(()->new EntityIdNotFoundException(Pub.class,pub.getId()));
         Pub mapped =PubEditDtoMapper.mapToEntity(pub);
         if(mapped.getName()!=null) {
             patched .setName(mapped.getName());
@@ -95,6 +105,9 @@ public class PubService {
         }
         if(mapped.getDescription()!=null) {
             patched.setDescription(mapped.getDescription());
+        }
+        if(mapped.getGeoLocation()!=null) {
+            patched.setGeoLocation(mapped.getGeoLocation());
         }
         if(mapped.getPlaceId()!=null) {
             patched.setPlaceId(mapped.getPlaceId());
@@ -150,5 +163,4 @@ public class PubService {
     {
         pubRepository.deleteById(id);
     }
-    //public Pub editPub(pub )
 }

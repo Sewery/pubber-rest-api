@@ -28,6 +28,8 @@ public class PubClientDto {
     @Pattern(regexp = "^(https?:\\/\\/).*")
     private String iconUrl;
     private String description;
+    private Double latitude;
+    private Double longitude;
     private Boolean reservable;
     private Boolean takeout;
     private RatingsClientDto ratings;
