@@ -3,11 +3,11 @@ package com.sartyro.pubberrestapi.model;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Data
@@ -18,9 +18,12 @@ public class Drink {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id_drink",nullable = false)
     private Long id;
+    @NotNull
     @Column(name="drink_name")
     private String name;
+    @NotNull
     private String type;
+    @NotNull
     @Column(name="drink_description")
     private String description;
     @ManyToMany(mappedBy = "drinks")

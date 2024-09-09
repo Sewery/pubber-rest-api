@@ -1,19 +1,23 @@
 package com.sartyro.pubberrestapi.service;
 
-import com.sartyro.pubberrestapi.controller.clientdto.PubClientDto;
-import com.sartyro.pubberrestapi.controller.clientdto.mappers.PubClientDtoMapper;
-import com.sartyro.pubberrestapi.controller.editdto.PubEditDto;
-import com.sartyro.pubberrestapi.controller.editdto.mappers.PubEditDtoMapper;
+import com.sartyro.pubberrestapi.dto.clientdto.PubClientDto;
+import com.sartyro.pubberrestapi.dto.clientdto.mappers.PubClientDtoMapper;
+import com.sartyro.pubberrestapi.dto.editdto.mapppers.PubDtoMapper;
+import com.sartyro.pubberrestapi.dto.editdto.request.PubEditRequestDto;
+import com.sartyro.pubberrestapi.dto.editdto.response.PubEditResponseDto;
 import com.sartyro.pubberrestapi.exception.EntityIdNotFoundException;
 import com.sartyro.pubberrestapi.exception.NullFieldException;
-import com.sartyro.pubberrestapi.model.Photo;
+import com.sartyro.pubberrestapi.model.Drink;
 import com.sartyro.pubberrestapi.model.Pub;
 import com.sartyro.pubberrestapi.model.Ratings;
+import com.sartyro.pubberrestapi.repository.DrinkRepository;
 import com.sartyro.pubberrestapi.repository.PubRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -21,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PubService {
     private final PubRepository pubRepository;
-
+    private final DrinkRepository drinkRepository;
     public List<PubClientDto> getPubDtoListOptimized()
     {
         List<Pub> pubs =pubRepository.findAllPubsFetchOpeningHours();
@@ -34,24 +38,51 @@ public class PubService {
     {
         return PubClientDtoMapper.mapToDtoList(pubRepository.findAll());
     }
-    public PubEditDto getSinglePub(Long id)
+    public PubEditResponseDto getPubById(Long id)
     {
-        return PubEditDtoMapper.mapToDto( pubRepository.findById(id).orElseThrow(()->new EntityIdNotFoundException(Pub.class,id)));
-    }
-    public PubEditDto addPub(PubEditDto pub)
-    {
-//        pub.setId(PubEditDto.EMPTY_ID);
-        return PubEditDtoMapper.mapToDto(pubRepository.save(PubEditDtoMapper.mapToEntity(pub)));
+        return PubDtoMapper.fromEntityToResponse( pubRepository
+                .findById(id)
+                .orElseThrow(()->new EntityIdNotFoundException(Pub.class,id))
+        );
     }
     @Transactional
-    public PubEditDto editPub(PubEditDto pub)
+    public List<Drink> fetchDrinks(PubEditRequestDto pubEditRequestDto){
+        List<Drink> drinkEntityList = new ArrayList<>();
+        if(pubEditRequestDto.getDrinksIDs()==null){
+            return Collections.emptyList();
+        }
+        for( var id: pubEditRequestDto.getDrinksIDs()){
+            drinkEntityList.add(
+                    drinkRepository
+                            .findById(id)
+                            .orElseThrow(()->new EntityIdNotFoundException(Drink.class,id))
+            );
+        }
+        return drinkEntityList;
+    }
+    @Transactional
+    public PubEditResponseDto addPub(PubEditRequestDto pub)
     {
-        if(pub==null || pub.getId()==null){
+        List<Drink> drinks = fetchDrinks(pub);
+        return PubDtoMapper.fromEntityToResponse(
+                pubRepository.save(
+                        PubDtoMapper.fromRequestToEntity(pub, drinks)
+                )
+        );
+    }
+    @Transactional
+    public PubEditResponseDto editPub(PubEditRequestDto pubRequest)
+    {
+        //1. Checking if request dto is correct
+        if(pubRequest==null || pubRequest.getId()==null){
             throw new NullFieldException(Pub.class,"id");
         }
-        Pub edited=pubRepository.findById(pub.getId())
-                .orElseThrow(()->new EntityIdNotFoundException(Pub.class,pub.getId()));
-        Pub mapped=PubEditDtoMapper.mapToEntity(pub);
+        //2. Mapping request dto to entity
+        Pub edited=pubRepository
+                .findById(pubRequest.getId())
+                .orElseThrow(()->new EntityIdNotFoundException(Pub.class,pubRequest.getId()));
+        Pub mapped=PubDtoMapper.fromRequestToEntity(pubRequest, fetchDrinks(pubRequest));
+        //5. Changing fields
         edited.setName(mapped.getName());
         edited.setAddress(mapped.getAddress());
         edited.setGeoLocation(mapped.getGeoLocation());
@@ -69,95 +100,112 @@ public class PubService {
         edited.setRating(mapped.getRating());
 
         pubRepository.save(edited);
-        return PubEditDtoMapper.mapToDto(edited);
+        return PubDtoMapper.fromEntityToResponse(edited);
     }
+    //If filed is null or none present it's not changed, otherwise it's patched
     @Transactional
-    public PubEditDto patchPub(PubEditDto pub)
+    public PubEditResponseDto patchPub(PubEditRequestDto pubRequest)
     {
-        if(pub==null || pub.getId()==null){
+        //1. Checking if request dto is correct
+        if(pubRequest==null || pubRequest.getId()==null){
             throw new NullFieldException(Pub.class,"id");
         }
-        Pub patched=pubRepository.findById(pub.getId()).orElseThrow(()->new EntityIdNotFoundException(Pub.class,pub.getId()));
-        Pub mapped =PubEditDtoMapper.mapToEntity(pub);
-        if(mapped.getName()!=null) {
-            patched .setName(mapped.getName());
+        //2. Mapping request dto to entity
+        Pub mappedPubRequest =PubDtoMapper.fromRequestToEntity(pubRequest,null);
+
+        //3. Retrieving pub by id from db
+        Pub pubPatched=pubRepository
+                .findById(pubRequest.getId())
+                .orElseThrow(()->new EntityIdNotFoundException(Pub.class,pubRequest.getId()));
+
+        //4. Changing drinks if requested
+        if(pubRequest.getDrinksIDs()!=null){
+            pubPatched.setDrinks(fetchDrinks(pubRequest));
         }
-        if(mapped.getCity()!=null) {
-            patched.setCity(mapped.getCity());
+
+        //5. Changing other fields if requested
+        if(mappedPubRequest.getName()!=null) {
+            pubPatched .setName(mappedPubRequest.getName());
         }
-        if(mapped.getReservable()!=null) {
-            patched.setReservable(mapped.getReservable());
+        if(mappedPubRequest.getCity()!=null) {
+            pubPatched.setCity(mappedPubRequest.getCity());
         }
-        if(mapped.getTakeout()!=null) {
-            patched.setTakeout(mapped.getTakeout());
+        if(mappedPubRequest.getReservable()!=null) {
+            pubPatched.setReservable(mappedPubRequest.getReservable());
         }
-        if(mapped.getAddress()!=null) {
-            patched.setAddress(mapped.getAddress());
+        if(mappedPubRequest.getTakeout()!=null) {
+            pubPatched.setTakeout(mappedPubRequest.getTakeout());
         }
-        if(mapped.getDrinks()!=null) {
-            patched.setDrinks(mapped.getDrinks());
+        if(mappedPubRequest.getAddress()!=null) {
+            pubPatched.setAddress(mappedPubRequest.getAddress());
         }
-        if(mapped.getOpeningHours()!=null) {
-            patched.setOpeningHours(mapped.getOpeningHours());
+        if(mappedPubRequest.getDrinks()!=null) {
+            pubPatched.setDrinks(mappedPubRequest.getDrinks());
         }
-        if(mapped.getPhotos()!=null) {
-            patched.setPhotos(mapped.getPhotos());
+        if(mappedPubRequest.getOpeningHours()!=null) {
+            pubPatched.setOpeningHours(mappedPubRequest.getOpeningHours());
         }
-        if(mapped.getDescription()!=null) {
-            patched.setDescription(mapped.getDescription());
+        if(mappedPubRequest.getPhotos()!=null) {
+            pubPatched.setPhotos(mappedPubRequest.getPhotos());
         }
-        if(mapped.getGeoLocation()!=null) {
-            patched.setGeoLocation(mapped.getGeoLocation());
+        if(mappedPubRequest.getDescription()!=null) {
+            pubPatched.setDescription(mappedPubRequest.getDescription());
         }
-        if(mapped.getPlaceId()!=null) {
-            patched.setPlaceId(mapped.getPlaceId());
+        if(pubRequest.getLatitude()!=null) {
+            pubPatched.getGeoLocation().setLatitude(pubRequest.getLatitude());
         }
-        if(mapped.getName()!=null) {
-            patched.setWebsiteUrl(mapped.getWebsiteUrl());
+        if(pubRequest.getLongitude()!=null) {
+            pubPatched.getGeoLocation().setLongitude(pubRequest.getLongitude());
         }
-        if(mapped.getPhoneNumber()!=null) {
-            patched.setPhoneNumber(mapped.getPhoneNumber());
+        if(mappedPubRequest.getPlaceId()!=null) {
+            pubPatched.setPlaceId(mappedPubRequest.getPlaceId());
         }
-        if(mapped.getIconUrl()!=null) {
-            patched.setIconUrl(mapped.getIconUrl());
+        if(mappedPubRequest.getName()!=null) {
+            pubPatched.setWebsiteUrl(mappedPubRequest.getWebsiteUrl());
         }
-        if(mapped.getRating()!=null) {
-            Ratings ratings=mapped.getRating();
+        if(mappedPubRequest.getPhoneNumber()!=null) {
+            pubPatched.setPhoneNumber(mappedPubRequest.getPhoneNumber());
+        }
+        if(mappedPubRequest.getIconUrl()!=null) {
+            pubPatched.setIconUrl(mappedPubRequest.getIconUrl());
+        }
+        if(mappedPubRequest.getRating()!=null) {
+            Ratings ratings=mappedPubRequest.getRating();
             if(ratings.getGoogle()!=null) {
-                patched.getRating().setGoogle(ratings.getGoogle());
+                pubPatched.getRating().setGoogle(ratings.getGoogle());
             }
             if(ratings.getGoogleCount()!=null) {
-                patched.getRating().setGoogleCount(ratings.getGoogleCount());
+                pubPatched.getRating().setGoogleCount(ratings.getGoogleCount());
             }
             if(ratings.getFacebook()!=null) {
-                patched.getRating().setFacebook(ratings.getFacebook());
+                pubPatched.getRating().setFacebook(ratings.getFacebook());
             }
             if(ratings.getFacebookCount()!=null) {
-                patched.getRating().setFacebookCount(ratings.getFacebookCount());
+                pubPatched.getRating().setFacebookCount(ratings.getFacebookCount());
             }
             if(ratings.getUntapped()!=null) {
-                patched.getRating().setUntapped(ratings.getUntapped());
+                pubPatched.getRating().setUntapped(ratings.getUntapped());
             }
             if(ratings.getUntappedCount()!=null) {
-                patched.getRating().setUntappedCount(ratings.getUntappedCount());
+                pubPatched.getRating().setUntappedCount(ratings.getUntappedCount());
             }
             if(ratings.getTripAdvisor()!=null) {
-                patched.getRating().setTripAdvisor(ratings.getTripAdvisor());
+                pubPatched.getRating().setTripAdvisor(ratings.getTripAdvisor());
             }
             if(ratings.getTripAdvisorCount()!=null) {
-                patched.getRating().setTripAdvisorCount(ratings.getTripAdvisorCount());
+                pubPatched.getRating().setTripAdvisorCount(ratings.getTripAdvisorCount());
             }
             if(ratings.getOurDrinkQuality()!=null) {
-                patched.getRating().setOurDrinkQuality(ratings.getOurDrinkQuality());
+                pubPatched.getRating().setOurDrinkQuality(ratings.getOurDrinkQuality());
             }
             if(ratings.getOurServiceQuality()!=null) {
-                patched.getRating().setOurServiceQuality(ratings.getOurServiceQuality());
+                pubPatched.getRating().setOurServiceQuality(ratings.getOurServiceQuality());
             }
             if(ratings.getOurCost()!=null) {
-                patched.getRating().setOurCost(ratings.getOurCost());
+                pubPatched.getRating().setOurCost(ratings.getOurCost());
             }
         }
-        return PubEditDtoMapper.mapToDto(pubRepository.save(patched));
+        return PubDtoMapper.fromEntityToResponse(pubRepository.save(pubPatched));
     }
     public void deletePub(Long id)
     {

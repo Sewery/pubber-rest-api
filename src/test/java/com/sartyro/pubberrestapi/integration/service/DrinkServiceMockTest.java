@@ -1,7 +1,5 @@
 package com.sartyro.pubberrestapi.integration.service;
 
-import com.sartyro.pubberrestapi.model.Drink;
-import com.sartyro.pubberrestapi.model.DrinkStyles;
 import com.sartyro.pubberrestapi.repository.DrinkRepository;
 import com.sartyro.pubberrestapi.repository.DrinkStylesRepository;
 import com.sartyro.pubberrestapi.service.DrinkService;

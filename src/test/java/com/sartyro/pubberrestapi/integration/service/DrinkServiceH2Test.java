@@ -1,7 +1,8 @@
 package com.sartyro.pubberrestapi.integration.service;
 
-import com.sartyro.pubberrestapi.controller.editdto.DrinkEditDto;
-import com.sartyro.pubberrestapi.controller.editdto.DrinkStylesEditDto;
+import com.sartyro.pubberrestapi.dto.editdto.request.DrinkEditRequestDto;
+import com.sartyro.pubberrestapi.dto.editdto.request.DrinkStylesEditRequestDto;
+import com.sartyro.pubberrestapi.dto.editdto.response.DrinkStylesEditResponseDto;
 import com.sartyro.pubberrestapi.service.DrinkService;
 import com.sartyro.pubberrestapi.service.DrinkStylesService;
 import org.junit.jupiter.api.Test;
@@ -23,34 +24,34 @@ class DrinkServiceH2Test {
     @Test
     void itShouldGetAllDrinksWithStylesName() {
         //Given
-        List<DrinkStylesEditDto> startDrinkStyles = List.of(
-                DrinkStylesEditDto.builder()
+        List<DrinkStylesEditRequestDto> startDrinkStyles = List.of(
+                DrinkStylesEditRequestDto.builder()
                         .id(1L)
                         .styleName("IPA")
                         .build(),
-                DrinkStylesEditDto.builder()
+                DrinkStylesEditRequestDto.builder()
                         .id(2L)
                         .styleName("Pszeniczne")
                         .build(),
-                DrinkStylesEditDto.builder()
+                DrinkStylesEditRequestDto.builder()
                         .id(3L)
                         .styleName("APA")
                         .build()
         );
-        List<DrinkEditDto> startDrinks = List.of(
-            DrinkEditDto.builder()
+        List<DrinkEditRequestDto> startDrinks = List.of(
+            DrinkEditRequestDto.builder()
                     .id(1L)
                     .name("Amber")
                     .type("Beer")
                     .drinkStyles(List.of(startDrinkStyles.get(0), startDrinkStyles.get(2)))
                     .build(),
-            DrinkEditDto.builder()
+            DrinkEditRequestDto.builder()
                     .id(2L)
                     .name("Tyskie")
                     .type("Beer")
                     .drinkStyles(List.of(startDrinkStyles.get(1)))
                     .build(),
-            DrinkEditDto.builder()
+            DrinkEditRequestDto.builder()
                     .id(3L)
                     .name("Harnaś")
                     .type("Beer")
@@ -60,7 +61,7 @@ class DrinkServiceH2Test {
         //When
         drinkStylesService.addDrinkStyle(startDrinkStyles.get(0));
         drinkStylesService.addDrinkStyle(startDrinkStyles.get(1));
-        List<DrinkStylesEditDto> resultDrinkStyles = drinkStylesService.getDrinkStyles();
+        List<DrinkStylesEditResponseDto> resultDrinkStyles = drinkStylesService.getDrinkStyles();
 
         startDrinks.get(0).setDrinkStyles(resultDrinkStyles);
         startDrinks.get(1).setDrinkStyles(List.of(resultDrinkStyles.get(0)));
@@ -68,7 +69,7 @@ class DrinkServiceH2Test {
         drinkService.addDrink( startDrinks.get(0));
         drinkService.addDrink( startDrinks.get(1));
         drinkService.addDrink(startDrinks.get(2));
-        List<DrinkEditDto> resultDrinks = drinkService.getDrinks();
+        List<DrinkStylesEditResponseDto> resultDrinks = drinkService.getDrinks();
 
         //Then
         for(int i=0;i<resultDrinkStyles.size();i++){

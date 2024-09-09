@@ -1,76 +1,114 @@
 package com.sartyro.pubberrestapi.service;
 
-import com.sartyro.pubberrestapi.controller.editdto.DrinkEditDto;
-import com.sartyro.pubberrestapi.controller.editdto.mappers.DrinkEditDtoMapper;
-import com.sartyro.pubberrestapi.controller.editdto.mappers.DrinkStylesEditDtoMapper;
+import com.sartyro.pubberrestapi.dto.editdto.mapppers.DrinkDtoMapper;
+import com.sartyro.pubberrestapi.dto.editdto.request.DrinkEditRequestDto;
+import com.sartyro.pubberrestapi.dto.editdto.response.DrinkEditResponseDto;
 import com.sartyro.pubberrestapi.exception.EntityIdNotFoundException;
 import com.sartyro.pubberrestapi.exception.NullFieldException;
 import com.sartyro.pubberrestapi.model.Drink;
+import com.sartyro.pubberrestapi.model.DrinkStyles;
 import com.sartyro.pubberrestapi.repository.DrinkRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.sartyro.pubberrestapi.repository.DrinkStylesRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DrinkService {
     private final DrinkRepository drinkRepository;
+    private final DrinkStylesRepository drinkStylesRepository;
 
-    public List<DrinkEditDto> getDrinks()
+    public List<DrinkEditResponseDto> getDrinks()
     {
-        return DrinkEditDtoMapper
-                .mapToDtoList(StreamSupport
+        return DrinkDtoMapper
+                .fromEntityListToResponseList(StreamSupport
                         .stream(drinkRepository.findAll()
                                 .spliterator(),false)
                         .toList());
     }
-    public DrinkEditDto getDrink(Long id)
+    public DrinkEditResponseDto getDrink(Long id)
     {
-        return DrinkEditDtoMapper.mapToDto(drinkRepository.findById(id)
-                .orElseThrow(()->new EntityIdNotFoundException(Drink.class,id)));
-    }
-    public DrinkEditDto addDrink(DrinkEditDto drink)
-    {
-//        drink.setId(DrinkEditDto.EMPTY_ID);
-        return DrinkEditDtoMapper.mapToDto(drinkRepository.save(DrinkEditDtoMapper.mapToEntity(drink)));
+        return DrinkDtoMapper
+                .fromEntityToResponse(
+                        drinkRepository
+                                .findById(id)
+                                .orElseThrow(()->new EntityIdNotFoundException(Drink.class,id))
+                );
     }
     @Transactional
-    public DrinkEditDto editDrink(DrinkEditDto drink)
+    public List<DrinkStyles> fetchDrinkStyles(DrinkEditRequestDto drinkRequest){
+        List<DrinkStyles> drinkStylesEntityList = new ArrayList<>();
+        if(drinkRequest.getDrinkStylesIDs()==null){
+            log.info("empty drink styles list");
+            return Collections.emptyList();
+        }
+        for( var id: drinkRequest.getDrinkStylesIDs()){
+            drinkStylesEntityList.add(
+                    drinkStylesRepository
+                            .findById(id)
+                            .orElseThrow(()->new EntityIdNotFoundException(DrinkStyles.class,id))
+            );
+        }
+        return drinkStylesEntityList;
+    }
+    @Transactional
+    public DrinkEditResponseDto addDrink(DrinkEditRequestDto drinkRequest)
+    {
+        List<DrinkStyles> drinkStyles = fetchDrinkStyles(drinkRequest);
+        return DrinkDtoMapper.fromEntityToResponse(
+                drinkRepository.save(
+                        DrinkDtoMapper.fromRequestToEntity(drinkRequest, drinkStyles)
+                )
+        );
+    }
+    @Transactional
+    public DrinkEditResponseDto editDrink(DrinkEditRequestDto drink)
     {
         if(drink==null || drink.getId()==null){
             throw new NullFieldException(Drink.class,"id");
         }
-        Drink edited=drinkRepository.findById(drink.getId())
+        Drink edited=drinkRepository
+                .findById(drink.getId())
                 .orElseThrow(()->new EntityIdNotFoundException(Drink.class,drink.getId()));
+
+        List<DrinkStyles> drinkStyles = fetchDrinkStyles(drink);
         edited.setName(drink.getName());
         edited.setType(drink.getType());
-        edited.setDrinkStyles(DrinkStylesEditDtoMapper.mapToEntityList(drink.getDrinkStyles()));
+        edited.setDrinkStyles(drinkStyles);
         drinkRepository.save(edited);
-        return DrinkEditDtoMapper.mapToDto(edited);
+        return DrinkDtoMapper.fromEntityToResponse(edited);
     }
     @Transactional
-    public DrinkEditDto patchDrink(DrinkEditDto drink) {
-        if(drink==null || drink.getId()==null){
+    public DrinkEditResponseDto patchDrink(DrinkEditRequestDto drinkRequest) {
+        if(drinkRequest==null || drinkRequest.getId()==null){
             throw new NullFieldException(Drink.class,"id");
         }
-        Drink patched = drinkRepository.findById(drink.getId())
-                .orElseThrow(()->new EntityIdNotFoundException(Drink.class,drink.getId()));
-        if (drink.getName() != null) {
-            patched.setName(drink.getName());
+        Drink patched = drinkRepository
+                .findById(drinkRequest.getId())
+                .orElseThrow(()->new EntityIdNotFoundException(Drink.class,drinkRequest.getId()));
+        if(drinkRequest.getDrinkStylesIDs()!=null){
+            patched.setDrinkStyles(fetchDrinkStyles(drinkRequest));
         }
-        if (drink.getType() != null) {
-            patched.setType(drink.getType());
+        if (drinkRequest.getName() != null) {
+            patched.setName(drinkRequest.getName());
         }
-        if(drink.getDrinkStyles() != null){
-            patched.setDrinkStyles(DrinkStylesEditDtoMapper.mapToEntityList(drink.getDrinkStyles()));
+        if (drinkRequest.getType() != null) {
+            patched.setType(drinkRequest.getType());
+        }
+        if(drinkRequest.getDrinkStylesIDs() != null){
+            patched.setDrinkStyles(fetchDrinkStyles(drinkRequest));
         }
         drinkRepository.save(patched);
-        return DrinkEditDtoMapper.mapToDto(patched);
+        return DrinkDtoMapper.fromEntityToResponse(patched);
     }
     public void deleteDrink(Long id)
     {

@@ -1,6 +1,7 @@
 package com.sartyro.pubberrestapi.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import jakarta.persistence.*;
@@ -18,12 +19,16 @@ public class OpeningHours {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id_opening_hours",nullable = false)
     private Long id;
+    @NotNull
     @Column(name="weekday")
     private String weekday;
+    @NotNull
     @Column(name="time_open")
     private LocalTime timeOpen;
     @Column(name="time_close")
+    @NotNull
     private LocalTime timeClose;
+    @NotNull
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="id_pub")
     @JsonBackReference

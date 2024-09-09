@@ -1,18 +1,18 @@
 package com.sartyro.pubberrestapi.controller;
 
-import com.sartyro.pubberrestapi.controller.clientdto.OpeningHoursClientDto;
-import com.sartyro.pubberrestapi.controller.editdto.OpeningHoursEditDto;
-import com.sartyro.pubberrestapi.model.OpeningHours;
-import com.sartyro.pubberrestapi.model.Photo;
-import com.sartyro.pubberrestapi.model.Pub;
+import com.sartyro.pubberrestapi.dto.editdto.request.OpeningHoursEditRequestDto;
+import com.sartyro.pubberrestapi.dto.editdto.response.OpeningHoursEditResponseDto;
 import com.sartyro.pubberrestapi.service.OpeningHoursService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import jakarta.validation.Valid;
 
 import java.util.List;
+
+import static com.sartyro.pubberrestapi.util.Constants.EMPTY_ID;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,28 +21,43 @@ public class OpeningHoursController {
     private final OpeningHoursService openingHoursService;
 
     @GetMapping("pubs/-/openingHours/*")
-    public List<OpeningHoursEditDto> getOpeningHours()
+    public List<OpeningHoursEditResponseDto> getOpeningHours()
     {
         return openingHoursService.getAllOpeningHours();
     }
     @GetMapping("pubs/-/openingHours/{id}")
-    public OpeningHoursEditDto getSingleOpeningHours(@PathVariable @Positive Long id)
+    public OpeningHoursEditResponseDto getOpeningHoursById(@PathVariable @Positive Long id)
     {
         return openingHoursService.getOpeningHours(id);
     }
-    @PostMapping("pubs/{pubId}/openingHours")
-    public OpeningHoursEditDto addOpeningHours(@PathVariable @Positive Long pubId,@RequestBody @Valid OpeningHoursEditDto openingHours)
+    @GetMapping("pubs/{pubId}/openingHours")
+    public List<OpeningHoursEditResponseDto> getOpeningHoursByPubId(@PathVariable @Positive Long pubId)
     {
+        return openingHoursService.getOpeningHoursByPub(pubId);
+    }
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("pubs/{pubId}/openingHours")
+    public OpeningHoursEditResponseDto addOpeningHours(
+            @PathVariable @Positive Long pubId,
+            @RequestBody @Valid OpeningHoursEditRequestDto openingHours
+    ) {
+        openingHours.setId(EMPTY_ID);
         return openingHoursService.addOpeningHours(openingHours,pubId);
     }
-    @PutMapping("pubs/-/openingHours")
-    public OpeningHoursEditDto editOpeningHours(@RequestBody @Valid OpeningHoursEditDto openingHours)
-    {
+    @PutMapping("pubs/-/openingHours/{id}")
+    public OpeningHoursEditResponseDto editOpeningHours(
+            @PathVariable @Positive Long id,
+            @RequestBody @Valid OpeningHoursEditRequestDto openingHours
+    ) {
+        openingHours.setId(id);
         return openingHoursService.editOpeningHours(openingHours);
     }
-    @PatchMapping("pubs/-/openingHours")
-    public OpeningHoursEditDto patchOpeningHours(@RequestBody OpeningHoursEditDto openingHours)
-    {
+    @PatchMapping("pubs/-/openingHours/{id}")
+    public OpeningHoursEditResponseDto patchOpeningHours(
+            @PathVariable @Positive Long id,
+            @RequestBody OpeningHoursEditRequestDto openingHours
+    ) {
+        openingHours.setId(id);
         return openingHoursService.patchOpeningHours(openingHours);
     }
     @DeleteMapping("pubs/-/openingHours/{id}")

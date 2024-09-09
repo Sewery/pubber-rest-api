@@ -1,18 +1,18 @@
 package com.sartyro.pubberrestapi.controller;
 
-import com.sartyro.pubberrestapi.controller.editdto.DrinkEditDto;
-import com.sartyro.pubberrestapi.model.Drink;
+import com.sartyro.pubberrestapi.dto.editdto.request.DrinkEditRequestDto;
+import com.sartyro.pubberrestapi.dto.editdto.response.DrinkEditResponseDto;
 import com.sartyro.pubberrestapi.service.DrinkService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.NaturalIdCache;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
 import java.util.List;
+
+import static com.sartyro.pubberrestapi.util.Constants.EMPTY_ID;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,28 +21,32 @@ public class DrinkController {
     private final DrinkService drinkService;
 
     @GetMapping("/drinks/*")
-    public List<DrinkEditDto> getDrinks() {
+    public List<DrinkEditResponseDto> getDrinks() {
         return drinkService.getDrinks();
     }
     @GetMapping("/drinks/{id}")
-    public DrinkEditDto getSingleDrink(@PathVariable @Positive Long id)
+    public DrinkEditResponseDto getDrinkById(@PathVariable @Positive Long id)
     {
         return drinkService.getDrink(id);
     }
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/drinks")
-    public DrinkEditDto addDrink(@RequestBody @Valid DrinkEditDto drink)
+    public DrinkEditResponseDto addDrink(@RequestBody @Valid DrinkEditRequestDto drink)
     {
+        drink.setId(EMPTY_ID);
         return drinkService.addDrink(drink);
     }
 
-    @PutMapping("/drinks")
-    public DrinkEditDto editDrink(@RequestBody @Valid DrinkEditDto drink)
+    @PutMapping("/drinks/{id}")
+    public DrinkEditResponseDto editDrink(@PathVariable @Positive Long id,@RequestBody @Valid DrinkEditRequestDto drink)
     {
+        drink.setId(id);
         return drinkService.editDrink(drink);
     }
-    @PatchMapping("/drinks")
-    public DrinkEditDto patchDrink(@RequestBody DrinkEditDto drink)
+    @PatchMapping("/drinks/{id}")
+    public DrinkEditResponseDto patchDrink(@PathVariable @Positive Long id,@RequestBody DrinkEditRequestDto drink)
     {
+        drink.setId(id);
         return drinkService.patchDrink(drink);
     }
     @DeleteMapping("/drinks/{id}")

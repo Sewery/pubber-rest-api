@@ -1,11 +1,7 @@
 package com.sartyro.pubberrestapi.integration.repository;
 
-import com.sartyro.pubberrestapi.controller.editdto.DrinkEditDto;
-import com.sartyro.pubberrestapi.controller.editdto.DrinkStylesEditDto;
 import com.sartyro.pubberrestapi.model.Drink;
-import com.sartyro.pubberrestapi.model.DrinkStyles;
 import com.sartyro.pubberrestapi.repository.DrinkRepository;
-import com.sartyro.pubberrestapi.repository.DrinkStylesRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.hibernate.Session;
@@ -18,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 

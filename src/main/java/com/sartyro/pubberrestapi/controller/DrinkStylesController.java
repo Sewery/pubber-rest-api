@@ -1,14 +1,18 @@
 package com.sartyro.pubberrestapi.controller;
 
-import com.sartyro.pubberrestapi.controller.editdto.DrinkStylesEditDto;
+import com.sartyro.pubberrestapi.dto.editdto.request.DrinkStylesEditRequestDto;
+import com.sartyro.pubberrestapi.dto.editdto.response.DrinkStylesEditResponseDto;
 import com.sartyro.pubberrestapi.service.DrinkStylesService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.sartyro.pubberrestapi.util.Constants.EMPTY_ID;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,29 +21,37 @@ public class DrinkStylesController {
 
     private final DrinkStylesService drinkStylesService;
     @GetMapping("/drink_styles/*")
-    public List<DrinkStylesEditDto> getDrinkStyles() {
+    public List<DrinkStylesEditResponseDto> getDrinkStyles() {
         return drinkStylesService.getDrinkStyles();
     }
     @GetMapping("/drink_styles/{id}")
-    public DrinkStylesEditDto getSingleDrinkStyle(@PathVariable @Positive Long id)
+    public DrinkStylesEditResponseDto getDrinkStyleById(@PathVariable @Positive Long id)
     {
        return drinkStylesService.getDrinkStyle(id);
     }
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/drink_styles")
-    public DrinkStylesEditDto addDrinkStyle(@RequestBody  @Valid DrinkStylesEditDto drink)
+    public DrinkStylesEditResponseDto addDrinkStyle(@RequestBody  @Valid DrinkStylesEditRequestDto drinkStyle)
     {
-        return drinkStylesService.addDrinkStyle(drink);
+        drinkStyle.setId(EMPTY_ID);
+        return drinkStylesService.addDrinkStyle(drinkStyle);
     }
 
-    @PutMapping("/drink_styles")
-    public DrinkStylesEditDto editDrinkStyle(@RequestBody  @Valid DrinkStylesEditDto drink)
-    {
-        return drinkStylesService.editDrinkStyle(drink);
+    @PutMapping("/drink_styles/{id}")
+    public DrinkStylesEditResponseDto editDrinkStyle(
+            @PathVariable @Positive Long id,
+            @RequestBody  @Valid DrinkStylesEditRequestDto drinkStyle
+    ) {
+        drinkStyle.setId(id);
+        return drinkStylesService.editDrinkStyle(drinkStyle);
     }
-    @PatchMapping("/drink_styles")
-    public DrinkStylesEditDto patchDrinkStyle(@RequestBody @Valid DrinkStylesEditDto drink)
-    {
-        return drinkStylesService.patchDrinkStyle(drink);
+    @PatchMapping("/drink_style/{id}")
+    public DrinkStylesEditResponseDto patchDrinkStyle(
+            @PathVariable @Positive Long id,
+            @RequestBody @Valid DrinkStylesEditRequestDto drinkStyle
+    ) {
+        drinkStyle.setId(id);
+        return drinkStylesService.patchDrinkStyle(drinkStyle);
     }
     @DeleteMapping("/drink_styles/{id}")
     public void deleteDrinkStyle(@PathVariable @Positive Long id)

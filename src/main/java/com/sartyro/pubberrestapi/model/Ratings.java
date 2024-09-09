@@ -1,15 +1,12 @@
 package com.sartyro.pubberrestapi.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.PositiveOrZero;
+import lombok.*;
 
 import jakarta.persistence.*;
 
 @Entity
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Ratings {

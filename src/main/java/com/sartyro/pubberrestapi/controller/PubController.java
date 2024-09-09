@@ -1,18 +1,19 @@
 package com.sartyro.pubberrestapi.controller;
 
-import com.sartyro.pubberrestapi.controller.clientdto.PubClientDto;
-import com.sartyro.pubberrestapi.controller.editdto.PubEditDto;
+import com.sartyro.pubberrestapi.dto.clientdto.PubClientDto;
+import com.sartyro.pubberrestapi.dto.editdto.request.PubEditRequestDto;
+import com.sartyro.pubberrestapi.dto.editdto.response.PubEditResponseDto;
 import com.sartyro.pubberrestapi.service.PubService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.util.List;
-import java.util.logging.Logger;
+
+import static com.sartyro.pubberrestapi.util.Constants.EMPTY_ID;
 
 
 @RestController
@@ -27,23 +28,27 @@ public class PubController {
         return pubService.getPubDtoListOptimized();
     }
     @GetMapping("/pubs/{id}")
-    public PubEditDto getSinglePub(@PathVariable Long id)
+    public PubEditResponseDto getPubById(@PathVariable Long id)
     {
-        return pubService.getSinglePub(id);
+        return pubService.getPubById(id);
     }
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/pubs")
-    public PubEditDto addPub(@RequestBody @Valid PubEditDto pub)
+    public PubEditResponseDto addPub(@RequestBody @Valid PubEditRequestDto pub)
     {
+        pub.setId(EMPTY_ID);
         return pubService.addPub(pub);
     }
-    @PutMapping("/pubs")
-    public PubEditDto editPub(@RequestBody @Valid PubEditDto pub)
+    @PutMapping("/pubs/{id}")
+    public PubEditResponseDto editPub(@PathVariable @Positive Long id,@RequestBody @Valid PubEditRequestDto pub)
     {
+        pub.setId(id);
         return pubService.editPub(pub);
     }
-    @PatchMapping("/pubs")
-    public PubEditDto patchPub(@RequestBody PubEditDto pub)
+    @PatchMapping("/pubs/{id}")
+    public PubEditResponseDto patchPub(@PathVariable @Positive Long id, @RequestBody PubEditRequestDto pub)
     {
+        pub.setId(id);
         return pubService.patchPub(pub);
     }
     @DeleteMapping("/pubs/{id}")
