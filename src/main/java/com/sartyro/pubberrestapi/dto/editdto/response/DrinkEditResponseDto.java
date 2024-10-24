@@ -8,6 +8,7 @@ public record DrinkEditResponseDto (
         String name,
         String type,
         String description,
+        BeerEditResponseDto beer,
         List<DrinkStylesEditResponseDto> drinkStyles
 ){
 

@@ -1,10 +1,12 @@
 package com.sartyro.pubberrestapi.service;
 
+import com.sartyro.pubberrestapi.dto.editdto.mapppers.BeerDtoMapper;
 import com.sartyro.pubberrestapi.dto.editdto.mapppers.DrinkDtoMapper;
 import com.sartyro.pubberrestapi.dto.editdto.request.DrinkEditRequestDto;
 import com.sartyro.pubberrestapi.dto.editdto.response.DrinkEditResponseDto;
 import com.sartyro.pubberrestapi.exception.EntityIdNotFoundException;
 import com.sartyro.pubberrestapi.exception.NullFieldException;
+import com.sartyro.pubberrestapi.model.Beer;
 import com.sartyro.pubberrestapi.model.Drink;
 import com.sartyro.pubberrestapi.model.DrinkStyles;
 import com.sartyro.pubberrestapi.repository.DrinkRepository;
@@ -30,9 +32,14 @@ public class DrinkService {
     public List<DrinkEditResponseDto> getDrinks()
     {
         return DrinkDtoMapper
-                .fromEntityListToResponseList(StreamSupport
-                        .stream(drinkRepository.findAll()
-                                .spliterator(),false)
+                .fromEntityListToResponseList(drinkRepository.findAll()
+                        .stream()
+                        .toList());
+    }
+    public List<DrinkEditResponseDto> getBeers(){
+        return DrinkDtoMapper
+                .fromEntityListToResponseList(drinkRepository.findAllBeers()
+                        .stream()
                         .toList());
     }
     public DrinkEditResponseDto getDrink(Long id)
@@ -84,6 +91,7 @@ public class DrinkService {
         edited.setName(drink.getName());
         edited.setType(drink.getType());
         edited.setDrinkStyles(drinkStyles);
+        edited.setBeer(BeerDtoMapper .fromRequestToEntity(drink.getBeer()));
         drinkRepository.save(edited);
         return DrinkDtoMapper.fromEntityToResponse(edited);
     }
@@ -106,6 +114,9 @@ public class DrinkService {
         }
         if(drinkRequest.getDrinkStylesIDs() != null){
             patched.setDrinkStyles(fetchDrinkStyles(drinkRequest));
+        }
+        if(drinkRequest.getBeer()!=null){
+            patched.setBeer(BeerDtoMapper.fromRequestToEntity(drinkRequest.getBeer()));
         }
         drinkRepository.save(patched);
         return DrinkDtoMapper.fromEntityToResponse(patched);

@@ -11,11 +11,17 @@ import java.util.List;
 @Builder
 @Getter
 public class DrinkClientDto {
+
     @NotBlank
     private String name;
+
     @NotBlank
     private String type;
+
     @NotBlank
     private String description;
+
     private List<DrinkStylesClientDto> drinkStyles;
+
+    private BeerClientDto beer;
 }

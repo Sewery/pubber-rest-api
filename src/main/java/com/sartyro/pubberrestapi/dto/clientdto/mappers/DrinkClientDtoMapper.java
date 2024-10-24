@@ -23,6 +23,7 @@ public class DrinkClientDtoMapper {
                 .name(drink.getName())
                 .description(drink.getDescription())
                 .drinkStyles(DrinkStylesClientDtoMapper.mapToDtoList(drink.getDrinkStyles()))
+                .beer(BeerClientDtoMapper.mapToDto(drink.getBeer()))
                 .build();
     }
 }

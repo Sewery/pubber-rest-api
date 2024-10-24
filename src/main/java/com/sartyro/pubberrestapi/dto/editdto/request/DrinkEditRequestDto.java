@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-import static com.sartyro.pubberrestapi.util.Constants.EMPTY_ID;
-
 
 
 @Builder
@@ -29,6 +27,7 @@ public class DrinkEditRequestDto {
     private String type;
     @NotBlank
     private String description;
+    private BeerEditRequestDto beer;
     @IdentityIdArray
     private List<Long> drinkStylesIDs;
 }

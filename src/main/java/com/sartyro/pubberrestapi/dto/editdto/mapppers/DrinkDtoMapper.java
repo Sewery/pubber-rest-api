@@ -22,6 +22,7 @@ public class DrinkDtoMapper {
             request.getName(),
             request.getType(),
             request.getDescription(),
+            BeerDtoMapper.fromRequestToEntity(request.getBeer()),
             null,  // Assuming pubs and drinkStyles are managed separately
             null
         );
@@ -34,6 +35,7 @@ public class DrinkDtoMapper {
                 request.getName(),
                 request.getType(),
                 request.getDescription(),
+                BeerDtoMapper.fromRequestToEntity(request.getBeer()),
                 null,  // Assuming pubs and drinkStyles are managed separately
                 drinkStyles
         );
@@ -48,6 +50,7 @@ public class DrinkDtoMapper {
             entity.getName(),
             entity.getType(),
             entity.getDescription(),
+                BeerDtoMapper.fromEntityToResponse(entity.getBeer()),
             DrinkStylesDtoMapper.fromEntityListToResponseList(entity.getDrinkStyles())
         );
     }

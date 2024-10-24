@@ -24,6 +24,10 @@ public class DrinkController {
     public List<DrinkEditResponseDto> getDrinks() {
         return drinkService.getDrinks();
     }
+    @GetMapping("/drinks/beer/*")
+    public List<DrinkEditResponseDto> getBeers() {
+        return drinkService.getBeers();
+    }
     @GetMapping("/drinks/{id}")
     public DrinkEditResponseDto getDrinkById(@PathVariable @Positive Long id)
     {

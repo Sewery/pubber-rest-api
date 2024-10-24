@@ -11,4 +11,7 @@ import java.util.List;
 public interface DrinkRepository extends JpaRepository<Drink,Long> {
     @Query("SELECT p FROM Drink p LEFT JOIN FETCH p.drinkStyles")
     List<Drink> findAllDrinks();
+
+    @Query("SELECT p FROM Drink p LEFT JOIN FETCH p.beer WHERE p.beer IS NOT NULL")
+    List<Drink> findAllBeers();
 }
