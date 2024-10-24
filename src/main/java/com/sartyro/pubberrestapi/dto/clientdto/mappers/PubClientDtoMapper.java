@@ -20,7 +20,7 @@ public class PubClientDtoMapper {
     public static PubClientDto mapToDto(Pub pub)
     {
         return PubClientDto.builder()
-                .id(pub.getId())
+                .pubId(pub.getId())
                 .name(pub.getName())
                 .placeId(pub.getPlaceId())
                 .city(pub.getCity())

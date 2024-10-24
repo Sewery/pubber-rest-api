@@ -19,6 +19,7 @@ public class DrinkClientDtoMapper {
     public static DrinkClientDto mapToDto(Drink drink)
     {
         return DrinkClientDto.builder()
+                .drinkId(drink.getId())
                 .type(drink.getType())
                 .name(drink.getName())
                 .description(drink.getDescription())

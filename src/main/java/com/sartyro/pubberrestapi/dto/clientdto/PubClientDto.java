@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 public class PubClientDto {
     @Positive
-    private Long id;
+    private Long pubId;
     @NotBlank
     private String name;
     @NotBlank
