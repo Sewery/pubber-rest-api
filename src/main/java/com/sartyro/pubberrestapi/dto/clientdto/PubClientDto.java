@@ -11,14 +11,10 @@ import java.util.List;
 @Builder
 @Getter
 public class PubClientDto {
-    @Positive
     private Long pubId;
-    @NotBlank
     private String name;
-    @NotBlank
     private String address;
     private String placeId;
-    @NotBlank
     private String city;
     @Pattern(
             regexp = "^(\\+\\d{2}\\s?)?((\\d{9})|(\\d{2}\\s\\d{3}\\s\\d{2}\\s\\d{2})|((\\d{3}\\s){2}\\d{3}))",

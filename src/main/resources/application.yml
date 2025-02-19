@@ -5,17 +5,21 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
   jpa:
+    generate-ddl: true
     hibernate:
       ddl-auto: update
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
+
   mvc:
     path match:
       matching-strategy: ant_path_matcher
 springdoc:
   swagger-ui:
     path: /edit/
-
 server:
   port: ${PORT:8080}
+credentials:
+  username: ${APP_USERNAME:admin}
+  password: ${APP_PASSWORD:matioszkar}

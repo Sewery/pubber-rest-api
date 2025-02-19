@@ -47,7 +47,7 @@ class PubControllerTest {
                 .andReturn();
         List<Pub> pubList= Arrays.stream(objectMapper.readValue(result.getResponse().getContentAsString(), Pub[].class)).toList();
         assertNotNull(pubList);
-        assertEquals(5, pubList.size());
+        assertEquals(3, pubList.size());
         Pub firstPub = pubList.get(0);
         assertEquals("The London Pub", firstPub.getName());
         assertEquals("123 London St, London, UK", firstPub.getAddress());

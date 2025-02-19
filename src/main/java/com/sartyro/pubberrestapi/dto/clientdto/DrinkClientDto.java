@@ -13,17 +13,12 @@ import java.util.List;
 @Builder
 @Getter
 public class DrinkClientDto {
-    @Positive
-    @NotNull
     private Long drinkId;
 
-    @NotBlank
     private String name;
 
-    @NotBlank
     private String type;
 
-    @NotBlank
     private String description;
 
     private List<DrinkStylesClientDto> drinkStyles;

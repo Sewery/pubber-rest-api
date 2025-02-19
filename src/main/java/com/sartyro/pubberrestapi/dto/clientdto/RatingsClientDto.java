@@ -8,9 +8,7 @@ import lombok.Getter;
 @Builder
 @Getter
 public class RatingsClientDto {
-    @PositiveOrZero
     private Float google;
-    @PositiveOrZero
     private Integer googleCount;
     private Float facebook;
     private Integer facebookCount;

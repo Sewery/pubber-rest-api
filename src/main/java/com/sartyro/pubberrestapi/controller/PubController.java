@@ -21,7 +21,6 @@ import static com.sartyro.pubberrestapi.util.Constants.EMPTY_ID;
 @Slf4j
 public class PubController {
     private final PubService pubService;
-
     @GetMapping("/pubs/*")
     public List<PubClientDto> getPubs()
     {

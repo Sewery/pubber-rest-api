@@ -9,8 +9,6 @@ import jakarta.validation.constraints.NotBlank;
 @Builder
 @Getter
 public class PhotoClientDto {
-    @NotBlank
     private String title;
-    @NotBlank
     private String photoUrl;
 }

@@ -7,6 +7,5 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class DrinkStylesClientDto {
-    @NotBlank
     private String styleName;
 }

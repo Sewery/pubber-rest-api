@@ -22,11 +22,9 @@ public class OpeningHours {
     @NotNull
     @Column(name="weekday")
     private String weekday;
-    @NotNull
     @Column(name="time_open")
     private LocalTime timeOpen;
     @Column(name="time_close")
-    @NotNull
     private LocalTime timeClose;
     @NotNull
     @ManyToOne(fetch=FetchType.LAZY)

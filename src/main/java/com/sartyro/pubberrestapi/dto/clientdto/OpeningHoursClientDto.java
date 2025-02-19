@@ -11,12 +11,9 @@ import java.time.LocalTime;
 @Builder
 @Getter
 public class OpeningHoursClientDto {
-    @NotBlank
     private String weekday;
-    @NotBlank
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime timeOpen;
-    @NotBlank
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime timeClose;
 }

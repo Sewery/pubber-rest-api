@@ -7,7 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class BeerClientDto {
-    @Positive
     private Long beerId;
     private String longDescription;
     private String shortDescription;

@@ -11,17 +11,20 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-
+import org.springframework.beans.factory.annotation.Value;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
+    @Value("${credentials.username}")
+    private String username;
+    @Value("${credentials.password}")
+    private String password;
     @Bean
     public InMemoryUserDetailsManager user() {
         return new InMemoryUserDetailsManager(
-                User.withUsername("admin")
-                        .password("{bcrypt}" + new BCryptPasswordEncoder().encode("Matioszkar"))
+                User.withUsername(username)
+                        .password("{bcrypt}" + new BCryptPasswordEncoder().encode(password))
                         .roles("USER", "ADMIN")
                         .build());
     }
