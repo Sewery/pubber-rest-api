@@ -1,7 +1,8 @@
 # Pubber REST API
-A pubs management system with secure admin endpoints and public data access
+Pubber REST API is part of the Pubber Project, which aims to create an app for searching for favorite pubs in nearby locations.
+This repository is responsible for the pub management system, providing secure admin endpoints and public data access.
 ## Summary
-REST API for sharing and managing pub information including:
+REST API for sharing and managing pub informations including:
 - Pub details
 - Drinks & drink styles
 - Opening hours
@@ -23,7 +24,7 @@ http://{YOUR_HOST}:{YOUR_PORT}/edit/swagger-ui/index.html
 ``
 ## Application architecture
 ### Security Model
-- Public Endpoints (/pubs/**): Read-only access to pub information, Available without authentication
+- Public Endpoints (/pubs/**): Read-only access to pub details, Available without authentication
 - Admin Endpoints (All other routes): Basic authentication required
 ### Used programming techniques
 - DTO Separation 
@@ -32,8 +33,9 @@ http://{YOUR_HOST}:{YOUR_PORT}/edit/swagger-ui/index.html
 - Validation 
 - Error Handling 
 - Controller-service-repository pattern
-- Integration tests
+- Integration tests (for now not working)
 ### Database diagram
+Database is hosted in RDS server in AWS.
 ![Screenshot showing Database Diagram](docs/database-diagram.png "Screenshot showing Database Diagram")
 
 ## Configuration 
@@ -45,3 +47,5 @@ DB_PASSWORD=securepassword
 APP_USERNAME=admin
 APP_PASSWORD=secret
 ```
+It is also possiblity to run in develepoment profile. For this .env file is not needed.
+Run Docker Compose file, then execute Spring Boot application using IntelliJ IDEA.
