@@ -1,11 +1,13 @@
 # Pubber REST API
-Pubber REST API is part of the Pubber Project, which aims to create an app for searching for favorite pubs in nearby locations.
-This repository is responsible for the pub management system, providing secure admin endpoints and public data access.
+The Pubber REST API is part of the [Pubber project](https://github.com/OverMighties/pubber),  platform designed to help users discover and explore their favorite pubs in nearby locations.
+This repository is reposnible for the backend REST API, which handles pub management and data access. It provides:
+* **Secure Admin Endpoints:** For managing pub data, including creation, updates, and deletion.
+* **Public Data Access:** For users to retrieve pub information for their searches.
 ## Summary
-REST API for sharing and managing pub informations including:
+The REST API for sharing and managing pub informations shares data about:
 - Pub details
-- Drinks & drink styles
-- Opening hours
+- Drinks & drinks styles
+- Opening hours of pubs
 - Tags & photos
 Built with Spring Boot in Java using JPA for database connection and OpenAPI for documentation.
 ## Development environment
